@@ -1,6 +1,8 @@
 import os
 import json
 from tracker import Expense
+import csv
+from tabulate import tabulate
 
 # inital value save into data/expenses.json
 initial_data = {"version": 1, "expenses": []}
@@ -9,7 +11,8 @@ class ExpenseStorage:
     filename = "data/expenses.json"
 
     def __init__(self):
-        self.expenses = self.load_expenses() # all data load first and store expenses variable
+        # all data load first and store expenses variable
+        self.expenses = self.load_expenses()
 
          # ensure folder exists
         folder = os.path.dirname(self.filename)
@@ -54,3 +57,53 @@ class ExpenseStorage:
     def display_add_message(self, expense):
         print(f"Added: {expense.id} | {expense.date} | {expense.category} | {expense.amount} | {expense.currency} | {expense.note} | {expense.created_at}")
 
+    def list_expenses(self, month, date_from, date_to, category, min, max, sort, desc, limit, format):
+        # print(month, date_from, date_to, category, min, max, sort, desc, limit, format)
+        data = self.expenses
+
+        # --- Filtering ---
+        if month:
+            data = [r for r in data if r.date.startswith(month)]
+        if date_from:
+            data = [r for r in data if r.date >= date_from]
+        if date_to:
+            data = [r for r in data if r.date <= date_to]
+        if category:
+            data = [r for r in data if r.category == category]
+        if min is not None:
+            data = [r for r in data if r.amount >= min]
+        if max is not None:
+            data = [r for r in data if r.amount <= max]
+
+        # --- Sorting ---
+        if sort:
+            data.sort(key=lambda r: getattr(r, sort, None), reverse=desc)
+
+        # --- Limit ---
+        if limit:
+            data = data[:limit]
+
+        if not data:
+            print("No records found.")
+            return
+
+        # --- Printing ---
+        # Convert to dicts for formatting
+        rows = []
+        for r in data:
+            rows.append({
+                "ID": r.id,
+                "Date": r.date,
+                "Category": r.category,
+                "Amount": r.amount,
+                "Currency": r.currency,
+                "Note": r.note
+            })
+
+        if format == "csv":
+            writer = csv.DictWriter(stdout, fieldnames=rows[0].keys())
+            writer.writeheader()
+            writer.writerows(rows)
+        else:
+            # Pretty table using tabulate
+            print(tabulate(rows, headers="keys"))

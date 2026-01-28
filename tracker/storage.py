@@ -44,7 +44,13 @@ class ExpenseStorage:
     def add_expense(self, expense):
         self.expenses.append(expense)
         self.save_expenses()
+        self.display_add_message(expense)
 
     # get expenses data
     def get_expenses(self):
         return {"version": 1, "expenses": self.load_expenses()}
+    
+    # display message
+    def display_add_message(self, expense):
+        print(f"Added: {expense.id} | {expense.date} | {expense.category} | {expense.amount} | {expense.currency} | {expense.note} | {expense.created_at}")
+

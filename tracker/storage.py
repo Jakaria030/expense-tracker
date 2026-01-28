@@ -37,8 +37,8 @@ class ExpenseStorage:
                 expenses_list = [expense.to_dict() for expense in self.expenses]
                 to_save = {"version": 1, "expenses": expenses_list}
                 file.write(json.dumps(to_save, indent=4))
-        except:
-            print(f"Error: Something went wrong when writting!")
+        except Exception as e:
+            print(f"Error writing file: {e}")
 
     # add expense data
     def add_expense(self, expense):
@@ -48,4 +48,3 @@ class ExpenseStorage:
     # get expenses data
     def get_expenses(self):
         return {"version": 1, "expenses": self.load_expenses()}
-        

@@ -8,6 +8,11 @@ def addExpense(date, category, amount, currency, note):
     storage = ExpenseStorage()
     storage.add_expense(expense)
 
+# delete an expense
+def deleteExpense(id):
+    storage = ExpenseStorage()
+    storage.delete_expense(id)
+
 # list expense data
 def listExpenses(month, date_from, date_to, category, min, max, sort, desc, limit, format):
     storage = ExpenseStorage()

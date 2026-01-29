@@ -51,6 +51,24 @@ class ExpenseStorage:
         self.save_expenses()
         self.display_add_message(expense)
 
+    # delete an expense
+    def delete_expense(self, id):
+        data = self.expenses
+
+        index = -1
+        for indx in range(len(data)):
+            if data[indx].id == id:
+                index = indx
+                break
+
+        if index == -1:
+            print("Id not found!")
+            return
+        
+        data.pop(index)
+        self.save_expenses()
+        print(f"ID: {id} data is deleted!")
+
     # get expenses data
     def get_expenses(self):
         return {"version": 1, "expenses": self.load_expenses()}
@@ -139,7 +157,7 @@ class ExpenseStorage:
             title += f" (To - {date_to})"
         if category:
             title += f" (Category - {category})"
-            
+
         print(title)
         print(f"Total Expenses: {len(data)}")
 

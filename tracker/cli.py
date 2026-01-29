@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from tracker import valid_date, positive_amount, get_date
-from tracker import addExpense, listExpenses, summaryExpenses
+from tracker import addExpense, listExpenses, summaryExpenses, deleteExpense
 
 
 # program start from main function
@@ -15,7 +15,11 @@ def main():
     add_parser.add_argument("--amount", required=True, type=positive_amount, help="Amount spent")
     add_parser.add_argument("--currency", default="BDT", help="Currency")
     add_parser.add_argument("--note", default="", help="Optional note")
-    
+
+    # ---- delete command ----
+    delete_parser = subparsers.add_parser("delete", help="Delete an expense by id")
+    delete_parser.add_argument("--id", required=True, help="Expense id like EXP-20260128-1234")
+
     # ---- list command ----
     list_parser = subparsers.add_parser("list", help="List expenses")
     list_parser.add_argument("--month", type=str, help="Filter by YYYY-MM")
@@ -43,6 +47,8 @@ def main():
     match args.command:
         case "add":
             addExpense(args.date, args.category, args.amount, args.currency, args.note)
+        case "delete":
+            deleteExpense(args.id)
         case "list":
             listExpenses(args.month, args.date_from, args.date_to, args.category, args.min, args.max, args.sort, args.desc, args.limit, args.format)
         case "summary":

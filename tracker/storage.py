@@ -67,7 +67,28 @@ class ExpenseStorage:
         
         data.pop(index)
         self.save_expenses()
-        print(f"ID: {id} data is deleted!")
+        print(f"Delete: {id} data is deleted!")
+
+    # edit an expense data
+    def edit_expense(self, id, category, amount, currency, note):
+        data = self.expenses
+        
+        ok = True
+        for d in data:
+            if d.id == id:
+                ok = False
+                d.category = category if category is not None else d.category
+                d.amount = amount if amount is not None else d.amount
+                d.currency = currency if currency is not None else d.currency
+                d.note = note if note is not None else d.note
+                break
+
+        if ok:
+            print("Id not found!")
+            return
+        
+        self.save_expenses()
+        print(f"Edit: {id} data is updated!")
 
     # get expenses data
     def get_expenses(self):

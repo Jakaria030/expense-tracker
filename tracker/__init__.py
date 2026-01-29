@@ -1,11 +1,11 @@
 from tracker.models import Expense
 from tracker.storage import ExpenseStorage
 from tracker.utils import valid_date, positive_amount, get_date, generate_id, get_datetime
-from tracker.service import addExpense, listExpenses, summaryExpenses, deleteExpense
+from tracker.service import addExpense, listExpenses, summaryExpenses, deleteExpense, editExpense
 
 # export and all file can import from tracker
 __all__ = [
     "Expense", "ExpenseStorage",
-    "addExpense", "listExpenses", "summaryExpenses", "deleteExpense",
+    "addExpense", "listExpenses", "summaryExpenses", "deleteExpense", "editExpense",
     "valid_date", "positive_amount", "get_date", "generate_id", "get_datetime",
 ]

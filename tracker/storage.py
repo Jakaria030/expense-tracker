@@ -5,9 +5,13 @@ import csv
 import sys
 from tabulate import tabulate
 from tracker.utils import filter_by_month, filter_by_date_from, filter_by_date_to, filter_by_category
+from tracker.logger import get_logger
 
 # inital value save into data/expenses.json
 initial_data = {"version": 1, "expenses": []}
+
+# logger
+logger = get_logger()
 
 class ExpenseStorage:
     filename = "data/expenses.json"
@@ -44,6 +48,7 @@ class ExpenseStorage:
                 file.write(json.dumps(to_save, indent=4))
         except Exception as e:
             print(f"Error writing file: {e}")
+            logger.error(f"Message: Writing file: {e}")
 
     # add expense data
     def add_expense(self, expense):
@@ -77,9 +82,9 @@ class ExpenseStorage:
         for d in data:
             if d.id == id:
                 ok = False
-                d.category = category if category is not None else d.category
+                d.category = category.lower() if category is not None else d.category
                 d.amount = amount if amount is not None else d.amount
-                d.currency = currency if currency is not None else d.currency
+                d.currency = currency.upper() if currency is not None else d.currency
                 d.note = note if note is not None else d.note
                 break
 
@@ -98,6 +103,7 @@ class ExpenseStorage:
     def display_add_message(self, expense):
         print(f"Added: {expense.id} | {expense.date} | {expense.category} | {expense.amount} | {expense.currency} | {expense.note} | {expense.created_at}")
 
+    # list expense data
     def list_expenses(self, month, date_from, date_to, category, min, max, sort, desc, limit, format):
         # print(month, date_from, date_to, category, min, max, sort, desc, limit, format)
         data = self.expenses

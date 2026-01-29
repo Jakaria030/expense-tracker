@@ -1,7 +1,10 @@
 from argparse import ArgumentParser
-from tracker import valid_date, positive_amount, get_date
+from tracker import valid_date, positive_amount, get_date, command_generator
 from tracker import addExpense, listExpenses, summaryExpenses, deleteExpense, editExpense
+from tracker.logger import get_logger
 
+# logger 
+logger = get_logger()
 
 # program start from main function
 def main():
@@ -54,14 +57,59 @@ def main():
     # match the which command run
     match args.command:
         case "add":
+            message = command_generator(
+                base_command = "python -m tracker add",
+                date = args.date,
+                category = args.category,
+                amount = args.amount,
+                currency = args.currency,
+                note = args.note,
+            )
+            logger.info(message)
             addExpense(args.date, args.category, args.amount, args.currency, args.note)
         case "delete":
+            message = command_generator(
+                base_command = "python -m tracker delete",
+                id = args.id
+            )
+            logger.info(message)
             deleteExpense(args.id)
         case "edit":
+            message = command_generator(
+                base_command = "python -m tracker edit",
+                id = args.id,
+                category = args.category,
+                amount = args.amount,
+                currency = args.currency,
+                note = args.note,
+            )
+            logger.info(message)
             editExpense(args.id, args.category, args.amount, args.currency, args.note)
         case "list":
+            message = command_generator(
+                base_command = "python -m tracker list",
+                month = args.month,
+                date_from = args.date_from,
+                date_to = args.date_to,
+                category = args.category,
+                min = args.min,
+                max = args.max,
+                sort = args.sort,
+                desc = args.desc,
+                limit = args.limit,
+                format = args.format
+            )
+            logger.info(message)
             listExpenses(args.month, args.date_from, args.date_to, args.category, args.min, args.max, args.sort, args.desc, args.limit, args.format)
         case "summary":
+            message = command_generator(
+                base_command = "python -m tracker summary",
+                month = args.month,
+                date_from = args.date_from,
+                date_to = args.date_to,
+                category = args.category,
+            )
+            logger.info(message)
             summaryExpenses(args.month, args.date_from, args.date_to, args.category)
 
 

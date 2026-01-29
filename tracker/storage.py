@@ -201,4 +201,4 @@ class ExpenseStorage:
         for key, value in categories.items():
             category = key.split("-")[0]
             currency = key.split("-")[1]
-            print(f"{category} {value} {currency}")
+            print(f"{category.capitalize()} {value} {currency}")

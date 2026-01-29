@@ -4,7 +4,7 @@ from tracker import generate_id, get_datetime
 
 # add expense data
 def addExpense(date, category, amount, currency, note):
-    expense = Expense(generate_id(), date, category, amount, currency, note, get_datetime())
+    expense = Expense(generate_id(), date, category.lower(), amount, currency.upper(), note, get_datetime())
     storage = ExpenseStorage()
     storage.add_expense(expense)
 

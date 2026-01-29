@@ -70,10 +70,10 @@ class ExpenseStorage:
         if date_to:
             data = [r for r in data if r.date <= date_to]
         if category:
-            data = [r for r in data if r.category == category]
-        if min is not None:
+            data = [r for r in data if r.category.lower() == category.lower()]
+        if min:
             data = [r for r in data if r.amount >= min]
-        if max is not None:
+        if max:
             data = [r for r in data if r.amount <= max]
 
         # --- Sorting ---
@@ -106,5 +106,4 @@ class ExpenseStorage:
             writer.writeheader()
             writer.writerows(rows)
         else:
-            # Pretty table using tabulate
             print(tabulate(rows, headers="keys"))

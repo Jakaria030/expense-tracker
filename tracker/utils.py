@@ -33,3 +33,19 @@ def generate_id():
 # generate iso date time
 def get_datetime():
     return datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+
+# filter by month YYYY-MM
+def filter_by_month(data, month):
+    return [d for d in data if d.date.startswith(month)]
+
+# filter by date from
+def filter_by_date_from(data, date_from):
+    return [d for d in data if d.date >= date_from]
+
+# filter by date to
+def filter_by_date_to(data, date_to):
+    return [d for d in data if d.date <= date_to]
+
+# filter by category
+def filter_by_category(data, category):
+    return [d for d in data if d.category.lower() == category.lower()]

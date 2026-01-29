@@ -4,6 +4,7 @@ from tracker import Expense
 import csv
 import sys
 from tabulate import tabulate
+from tracker.utils import filter_by_month, filter_by_date_from, filter_by_date_to, filter_by_category
 
 # inital value save into data/expenses.json
 initial_data = {"version": 1, "expenses": []}
@@ -64,13 +65,13 @@ class ExpenseStorage:
 
         # --- Filtering ---
         if month:
-            data = [r for r in data if r.date.startswith(month)]
+            data = filter_by_month(data, month)
         if date_from:
-            data = [r for r in data if r.date >= date_from]
+            data = filter_by_date_from(data, date_from)
         if date_to:
-            data = [r for r in data if r.date <= date_to]
+            data = filter_by_date_to(data, date_to)
         if category:
-            data = [r for r in data if r.category.lower() == category.lower()]
+            data = filter_by_category(data, category)
         if min:
             data = [r for r in data if r.amount >= min]
         if max:
@@ -85,7 +86,7 @@ class ExpenseStorage:
             data = data[:limit]
 
         if not data:
-            print("No records found.")
+            print("No records found!")
             return
 
         # --- Printing ---
@@ -107,3 +108,58 @@ class ExpenseStorage:
             writer.writerows(rows)
         else:
             print(tabulate(rows, headers="keys"))
+    
+    # summary expenses data
+    def summary_expenses(self, month, date_from, date_to, category):
+        # print(month, date_from, date_to, category)
+
+        data = self.expenses
+
+        # --- Filtering ---
+        if month:
+            data = filter_by_month(data, month)
+        if date_from:
+            data = filter_by_date_from(data, date_from)
+        if date_to:
+            data = filter_by_date_to(data, date_to)
+        if category:
+            data = filter_by_category(data, category)
+
+        # --- Format data to display ---
+        if not data:
+            print("No records found!")
+            return
+
+        title = "Summary:"
+        if month:
+            title += f" (Month - {month})"
+        if date_from:
+            title += f" (From - {date_from})"
+        if date_to:
+            title += f" (To - {date_to})"
+        if category:
+            title += f" (Category - {category})"
+            
+        print(title)
+        print(f"Total Expenses: {len(data)}")
+
+        # --- Summary: grand total by curreny ---
+        grand_totals = {}
+        for d in data:
+            grand_totals[d.currency] = grand_totals.get(d.currency, 0) + d.amount
+
+
+        for key, value in grand_totals.items():
+            print(f"Grand Total: {value} {key}")
+
+        # --- By category: filter by category and currency
+        print("\nBy Category:")
+        categories = {}
+        for d in data:
+            key = f"{d.category}-{d.currency}"
+            categories[key] = categories.get(key, 0) + d.amount
+
+        for key, value in categories.items():
+            category = key.split("-")[0]
+            currency = key.split("-")[1]
+            print(f"{category} {value} {currency}")

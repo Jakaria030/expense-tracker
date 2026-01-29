@@ -12,3 +12,8 @@ def addExpense(date, category, amount, currency, note):
 def listExpenses(month, date_from, date_to, category, min, max, sort, desc, limit, format):
     storage = ExpenseStorage()
     storage.list_expenses(month, date_from, date_to, category, min, max, sort, desc, limit, format)
+
+# summary expenses data
+def summaryExpenses(month, date_from, date_to, category):
+    storage = ExpenseStorage()
+    storage.summary_expenses(month, date_from, date_to, category)

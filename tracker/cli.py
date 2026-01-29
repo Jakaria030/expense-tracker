@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from tracker import valid_date, positive_amount, get_date
-from tracker import addExpense, listExpenses
+from tracker import addExpense, listExpenses, summaryExpenses
 
 
 # program start from main function
@@ -29,6 +29,14 @@ def main():
     list_parser.add_argument("--limit", type=int, help="Limit number of results")
     list_parser.add_argument("--format", type=str, default="table", help="Output format like table or csv")
 
+     # ---- summary command ----
+    summary_parser = subparsers.add_parser("summary", help="Expenses summary")
+    summary_parser.add_argument("--month", type=str, help="Summary by YYYY-MM")
+    summary_parser.add_argument("--from", dest="date_from", type=str, help="Summary from date YYYY-MM-DD")
+    summary_parser.add_argument("--to", dest="date_to", type=str, help="Summary to date YYYY-MM-DD")
+    summary_parser.add_argument("--category", type=str, help="Summary by category")
+    
+
     args = parser.parse_args()
     
     # match the which command run
@@ -37,6 +45,8 @@ def main():
             addExpense(args.date, args.category, args.amount, args.currency, args.note)
         case "list":
             listExpenses(args.month, args.date_from, args.date_to, args.category, args.min, args.max, args.sort, args.desc, args.limit, args.format)
+        case "summary":
+            summaryExpenses(args.month, args.date_from, args.date_to, args.category)
 
 
 

@@ -2,6 +2,7 @@ import os
 import json
 from tracker import Expense
 import csv
+import sys
 from tabulate import tabulate
 
 # inital value save into data/expenses.json
@@ -101,7 +102,7 @@ class ExpenseStorage:
             })
 
         if format == "csv":
-            writer = csv.DictWriter(stdout, fieldnames=rows[0].keys())
+            writer = csv.DictWriter(sys.stdout, fieldnames=rows[0].keys())
             writer.writeheader()
             writer.writerows(rows)
         else:
